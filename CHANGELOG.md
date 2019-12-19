@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/arvindnama/ng-packagr/compare/v9.0.0-rc.3...v1.1.0) (2019-12-19)
+
+
+### Features
+
+* add support to ts paths ([46eb431](https://github.com/arvindnama/ng-packagr/commit/46eb4317a4bc8ece3ffcaf9ee97a5fec9706d498))
+* asset pattern ([3bb8dc0](https://github.com/arvindnama/ng-packagr/commit/3bb8dc09c5b35c87616a0a53a020d0a05a32a976))
+* asset pattern to include glob similar to angular builder ([957c8f0](https://github.com/arvindnama/ng-packagr/commit/957c8f057636d86bf7e1637fa567540bed7a81f3))
+
+
+### Bug Fixes
+
+* update rollup to version 1.27.9 ([3505645](https://github.com/arvindnama/ng-packagr/commit/3505645d96bc25edb621a33196e3d0dfa9159f12))
+
 ## [9.0.0-rc.3](https://github.com/ng-packagr/ng-packagr/compare/v9.0.0-rc.2...v9.0.0-rc.3) (2019-12-04)
 
 
