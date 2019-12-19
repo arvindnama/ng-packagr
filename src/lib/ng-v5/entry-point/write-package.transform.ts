@@ -9,6 +9,7 @@ import * as log from '../../util/log';
 import { globFiles } from '../../util/glob';
 import { EntryPointNode, isEntryPointInProgress } from '../nodes';
 import { copyFile } from '../../util/copy';
+import { AssetEntry } from '../../ng-package-format/shared';
 
 export const writePackageTransform: Transform = transformFromPromise(async graph => {
   const entryPoint = graph.find(isEntryPointInProgress()) as EntryPointNode;
@@ -33,11 +34,13 @@ export const writePackageTransform: Transform = transformFromPromise(async graph
     );
   }
   if (ngPackage.assets.length && !ngEntryPoint.isSecondaryEntryPoint) {
-    const assets = ngPackage.assets.map(x => path.join(ngPackage.src, x));
-    const assetFiles = await globFiles(assets, {
-      ignore: ['**/node_modules/**', `${ngPackage.dest}/**`],
-    });
+    const ingoreOptions = {
+      ignore: ['.gitkeep', '**/.DS_Store', '**/Thumbs.db', '**/node_modules/**', `${ngPackage.dest}/**`],
+    };
+    const copyOptions = { overwrite: true, dereference: true };
 
+    const assets = ngPackage.assets.filter(x => typeof x === 'string').map(x => path.join(ngPackage.src, x as string));
+    const assetFiles = await globFiles(assets, ingoreOptions);
     if (assetFiles.length) {
       // COPY ASSET FILES TO DESTINATION
       log.info('Copying assets');
@@ -45,8 +48,26 @@ export const writePackageTransform: Transform = transformFromPromise(async graph
         assetFiles.map(value => {
           const relativePath = path.relative(ngPackage.src, value);
           const destination = path.resolve(ngPackage.dest, relativePath);
+          return copyFile(value, destination, copyOptions);
+        }),
+      );
+    }
 
-          return copyFile(value, destination, { overwrite: true, dereference: true });
+    const assetsEntries = ngPackage.assets.filter(x => typeof x !== 'string');
+    if (assetsEntries.length) {
+      log.info('Copying assets');
+      await Promise.all(
+        assetsEntries.map(async (entry: AssetEntry) => {
+          const src = path.resolve(ngPackage.src, entry.input);
+          const dest = path.join(ngPackage.dest, entry.output);
+          const options = {
+            cwd: src,
+            dot: true,
+            nodir: true,
+            ignore: [...ingoreOptions.ignore, ...(entry.ignore || [])],
+          };
+          const files = await globFiles(entry.glob, options);
+          return await Promise.all(files.map(x => copyFile(path.join(src, x), path.join(dest, x), copyOptions)));
         }),
       );
     }

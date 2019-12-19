@@ -9,6 +9,10 @@ export type SourceFilePath = string;
 
 export type DirectoryPath = string;
 
+export type AssetPattern = string | AssetEntry;
+
+export type AssetEntry = { glob: string; input: string; ignore?: string[]; output: string };
+
 export enum CssUrl {
   inline = 'inline',
   none = 'none',

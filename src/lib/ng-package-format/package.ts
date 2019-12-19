@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { NgEntryPoint } from './entry-point';
-import { DirectoryPath } from './shared';
+import { DirectoryPath, AssetPattern } from './shared';
 
 /**
  * A package being built. Quoting Angular Package Format, a package is:
@@ -33,6 +33,7 @@ import { DirectoryPath } from './shared';
  *
  * @link https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit#
  */
+
 export class NgPackage {
   constructor(
     private readonly basePath: string,
@@ -64,7 +65,7 @@ export class NgPackage {
   public get keepLifecycleScripts(): boolean {
     return this.primary.$get('keepLifecycleScripts') === true;
   }
-  public get assets(): string[] {
+  public get assets(): AssetPattern[] {
     return this.primary.$get('assets');
   }
 
