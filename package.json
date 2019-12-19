@@ -1,6 +1,6 @@
 {
   "name": "@anama/ng-packagr",
-  "version": "10.0.0-rc.3",
+  "version": "10.0.0",
   "description": "Compile and package a TypeScript library to Angular Package Format",
   "keywords": [
     "angular",
